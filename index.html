@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>C.js - Classical Circuit Simulator</title>
+	<meta name="description"
+		content="Classical (digital) circuit simulator - Build and test logic circuits in your browser">
+	<meta name="keywords"
+		content="classical circuit, digital circuit, logic gates, circuit simulator, AND, OR, NOT, XOR">
+
+	<link rel="stylesheet" href="C.css">
+	<link rel="stylesheet" href="C-Circuit-Editor.css">
+	<link rel="stylesheet" href="C-AnimatedBeam.css">
+
+	<style>
+		body {
+			padding: 2rem;
+			font-family: sans-serif;
+			max-width: 1200px;
+			margin: 0 auto;
+		}
+
+		header {
+			text-align: center;
+			margin-bottom: 3rem;
+		}
+
+		h1 {
+			color: #333;
+			font-size: 3rem;
+			margin-bottom: 0.5rem;
+		}
+
+		.tagline {
+			color: #666;
+			font-size: 1.2rem;
+			margin-bottom: 2rem;
+		}
+
+		.description {
+			background: #f5f5f5;
+			padding: 1.5rem;
+			border-left: 4px solid #333;
+			margin-bottom: 2rem;
+			border-radius: 4px;
+		}
+
+		h2 {
+			color: #333;
+			margin: 2rem 0 1rem 0;
+		}
+
+		.links {
+			display: flex;
+			gap: 1rem;
+			margin: 2rem 0;
+			flex-wrap: wrap;
+		}
+
+		.links a {
+			padding: 0.75rem 1.5rem;
+			background: #333;
+			color: white;
+			text-decoration: none;
+			border-radius: 4px;
+			transition: background 0.2s;
+		}
+
+		.links a:hover {
+			background: #555;
+		}
+
+		#palette-container {
+			margin: 2rem 0;
+		}
+
+		footer {
+			margin-top: 3rem;
+			padding-top: 2rem;
+			border-top: 1px solid #ddd;
+			color: #666;
+			font-size: 0.9rem;
+		}
+
+		footer a {
+			color: #333;
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<h1>C.js</h1>
+		<p class="tagline">Classical Circuit Simulator</p>
+	</header>
+
+	<div class="description">
+		<p>
+			<strong>C.js</strong> is a classical (digital) circuit simulator that runs right in your browser.
+			Build and test logic circuits using familiar gates like AND, OR, NOT, and XOR.
+			Drag and drop gates, watch signal flow, and evaluate your circuits in real-time.
+		</p>
+	</div>
+
+	<div class="links">
+		<a href="README.md" target="_blank">📖 Documentation</a>
+		<a href="dist/demo.html">🎮 Production Demo</a>
+		<a href="https://github.com/hasarinduperera/c.js" target="_blank">💻 GitHub</a>
+	</div>
+
+	<h2>Gate Palette</h2>
+	<div id="palette-container"></div>
+
+	<h2>Interactive Circuit Editor</h2>
+	<p>Try dragging gates from the palette above onto the circuit board. Click <strong>RUN</strong> to evaluate!</p>
+	<div id="circuit"></div>
+
+	<footer>
+		<p>
+			<strong>C.js</strong> - Classical Circuit Simulator<br>
+			Based on <a href="https://quantumjavascript.app/" target="_blank">Q.js</a> by Stewart Smith<br>
+			Free and open-source under the MIT License
+		</p>
+	</footer>
+
+	<!-- Load C.js -->
+	<script src="C.js"></script>
+	<script src="C-Bit.js"></script>
+	<script src="C-Gate.js"></script>
+	<script src="C-History.js"></script>
+	<script src="C-Circuit.js"></script>
+	<script src="C-AnimatedBeam.js"></script>
+	<script src="C-Circuit-Editor.js"></script>
+
+	<script>
+		console.log('=== C.js Classical Circuit Simulator ===')
+
+		// Create gate palette
+		const paletteEl = C.Circuit.Editor.createPalette()
+		document.getElementById('palette-container').appendChild(paletteEl)
+
+		// Create example circuit
+		const circuit = new C.Circuit(3, 4)
+		circuit.bits[0] = C.Bit.ONE
+		circuit.bits[1] = C.Bit.ZERO
+		circuit.bits[2] = C.Bit.ONE
+		circuit.set$('NOT', 1, 1)
+		circuit.set$('AND', 2, 2, 3)
+		circuit.set$('OR', 3, 1, 2)
+		circuit.toDom(document.getElementById('circuit'))
+
+		// Make circuit available in console
+		window.circuit = circuit
+
+		console.log('Circuit loaded! Try: window.circuit')
+	</script>
+</body>
+
+</html>

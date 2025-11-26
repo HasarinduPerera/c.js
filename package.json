@@ -1,0 +1,43 @@
+{
+  "name": "c.js",
+  "version": "1.0.0",
+  "description": "Classical (digital) circuit simulator - Build and test logic circuits using classical logic gates",
+  "main": "dist/c.js",
+  "scripts": {
+    "build": "./build.sh",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hasarinduperera/c.js"
+  },
+  "keywords": [
+    "classical",
+    "digital",
+    "circuit",
+    "simulator",
+    "logic",
+    "gates",
+    "AND",
+    "OR",
+    "NOT",
+    "XOR",
+    "NAND",
+    "NOR"
+  ],
+  "author": "Classical Circuit Simulator (C.js) - Based on Q.js by Stewart Smith",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hasarinduperera/c.js/issues"
+  },
+  "homepage": "https://github.com/hasarinduperera/c.js#readme",
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "browser": "dist/c.js",
+  "engines": {
+    "node": ">=12.0.0"
+  }
+}
