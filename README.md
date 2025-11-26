@@ -56,11 +56,28 @@ A classical (digital) circuit simulator inspired by the quantum circuit simulato
 Download the bundled files from the `dist/` folder:
 
 ```html
+<!DOCTYPE html>
+<html>
+<head>
 <link rel="stylesheet" href="path/to/c.css">
+</head>
+<body>
+	<div id="circuit"></div>
+	
 <script src="path/to/c.js"></script>
+	<script>
+		const circuit = new C.Circuit(3, 5)
+		circuit.toDom(document.getElementById('circuit'))
+	</script>
+</body>
+</html>
 ```
 
-### Option 2: NPM Package
+### Option 2: Use Individual Files (For Development)
+
+Include all source files individually (as shown in Quick Start above).
+
+### Option 3: NPM Package (Coming Soon)
 
 ```bash
 npm install c.js
@@ -94,9 +111,7 @@ This generates `dist/c.js` and `dist/c.css`.
 The circuit editor provides a fully interactive experience:
 
 ### Gate Placement
-- **Click** empty cells to place the selected gate
 - **Drag & Drop** gates from the palette
-- **Click** existing gates to cycle through types
 
 ### Palette
 ```javascript
@@ -107,12 +122,20 @@ document.body.appendChild(palette)
 ## API Reference
 
 ### C.Bit
-Represents a classical bit (0 or 1).
+
+Represents a classical bit with value 0 or 1.
 
 ```javascript
-const bit = new C.Bit(1)
-C.Bit.ZERO // 0
-C.Bit.ONE  // 1
+const bit0 = new C.Bit(0)  // Creates a bit with value 0
+const bit1 = new C.Bit(1)  // Creates a bit with value 1
+
+// Constants
+C.Bit.ZERO   // Bit with value 0
+C.Bit.ONE    // Bit with value 1
+C.Bit.LOW    // Same as ZERO
+C.Bit.HIGH   // Same as ONE
+C.Bit.FALSE  // Same as ZERO
+C.Bit.TRUE   // Same as ONE
 ```
 
 ### C.Gate
@@ -124,23 +147,50 @@ const output = notGate.applyToInputs(new C.Bit(1))
 ```
 
 ### C.Circuit
-Represents a complete circuit.
+
+Represents a complete circuit with bits and gates.
 
 ```javascript
-const circuit = new C.Circuit(3, 5) // 3 wires, 5 steps
-circuit.set$('AND', 1, 1) // Add gate
-circuit.evaluate$()       // Run simulation
+// Create a circuit with 3 bits and 5 time steps
+const circuit = new C.Circuit(3, 5)
+
+// Set input bit values
+circuit.bits[0] = C.Bit.ONE
+circuit.bits[1] = C.Bit.ZERO
+circuit.bits[2] = C.Bit.ONE
+
+// Add gates
+circuit.set$('NOT', momentIndex, registerIndex)
+circuit.set$('AND', 2, 1)
+
+// Remove gates
+circuit.clear$(momentIndex, registerIndex)
+
+// Evaluate circuit
+circuit.evaluate$()
+
+// Get results
 console.log(circuit.report$())
+console.log(circuit.toDiagram())
 ```
 
 ### C.Circuit.Editor
-Interactive DOM-based editor.
+
+Interactive DOM-based circuit editor.
 
 ```javascript
+// Create editor
 const editor = new C.Circuit.Editor(circuit, targetElement)
+
+// Or use convenience method
+const editor = circuit.toDom(targetElement)
+
+// Create gate palette
+const palette = C.Circuit.Editor.createPalette()
+document.body.appendChild(palette)
 ```
 
-## Text-Based Creation
+## Text-Based Circuit Creation
 
 Create circuits using simple text notation:
 
@@ -150,6 +200,46 @@ const circuit = C.Circuit.fromText(`
 	I---OR--I
 	I---I---XOR
 `)
+```
+
+Where:
+- Each row represents a bit (wire)
+- Gates are separated by `-` or spaces
+- `I` represents an identity/no-op operation
+
+## Examples
+
+### Half Adder
+
+```javascript
+const halfAdder = new C.Circuit(2, 3)
+halfAdder.bits[0] = C.Bit.ONE
+halfAdder.bits[1] = C.Bit.ONE
+halfAdder.set$('XOR', 1, 1)  // Sum output
+halfAdder.set$('AND', 1, 2)  // Carry output
+halfAdder.evaluate$()
+console.log(halfAdder.report$())
+```
+
+### NOT Gate
+
+```javascript
+const notCircuit = new C.Circuit(1, 2)
+notCircuit.bits[0] = C.Bit.ONE
+notCircuit.set$('NOT', 1, 1)
+notCircuit.evaluate$()
+// Result: Bit 1 will be 0
+```
+
+### AND Gate
+
+```javascript
+const andCircuit = new C.Circuit(2, 2)
+andCircuit.bits[0] = C.Bit.ONE
+andCircuit.bits[1] = C.Bit.ONE
+andCircuit.set$('AND', 1, 1)
+andCircuit.evaluate$()
+// Result: Bit 1 will be 1 (1 AND 1 = 1)
 ```
 
 ## Architecture
@@ -189,7 +279,7 @@ MIT License. See [LICENSE.md](LICENSE.md) for details.
 
 ## Credits
 
-Based on [Q.js](https://quantumjavascript.app/) by Stewart Smith.
+C.js is inspired by and based on [Q.js](https://quantumjavascript.app/) - a quantum circuit simulator by Stewart Smith.
 
 ## Contributing
 
